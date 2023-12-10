@@ -1,0 +1,27 @@
+version: '2'
+name: "lagoon2container-test"
+services:
+  builder:
+    image: lagoon-builder
+    container_name: lagoon-builder-web-app
+    volumes:
+      - $HOME/DockerMounts/ls2i-nuget-cache:/root/.nuget/:rw
+      - lagoon-app-test:/app/build/ 
+    env_file:
+      - test.env
+  runner:
+    image: lagoon-runner
+    container_name: lagoon-runner-web-app
+    depends_on:
+     - builder
+    ports:
+     - "8888:5000"
+    volumes:
+      - lagoon-app-test:/app
+    environment:
+      RUNER_APP_NAME: dotnet-app
+      ConnectionStrings__LocalDb: "Server=172.17.0.1;Database=lagoon-app;User Id=sa;Password=yourStrong#Password;TrustServerCertificate=True"
+      Lagoon__PublicUrl: "http://localhost:8888"
+      ASPNETCORE_URLS: "http://*:5000"
+volumes:
+  lagoon-app-test:

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate">
+        <meta http-equiv="Pragma" content="no-cache">
+        <script>
+            (function() {
+                var checkServer = function() {
+                    setTimeout(function() {
+                        fetch('/index.html?v=' + new Date().getTime())
+                            .then((response) => {
+                                if (response.headers.get('Server') == 'Kestrel') {
+                                    document.getElementById('hState').innerText = 'Starting application ...';
+                                    setTimeout(function () {
+                                        // Refresh the page
+                                        location.reload();
+                                    }, 1000);
+                                } else {
+                                    checkServer();
+                                }
+                            }).catch(() => {
+                                document.getElementById('hState').innerText = 'Starting application ...';
+                                checkServer();
+                            });
+                    }, 1000);
+                }
+                checkServer();
+            })();
+            (function() {
+                var checkServerState = function() {
+                    setTimeout(function() {
+                        fetch('/state.txt')
+                            .then(async(response) => {
+                                document.getElementById('hState').innerText = await response.text();
+                                checkServerState();
+                            }).catch(() => {
+                                checkServerState();
+                            });
+                    }, 500);
+                }
+                checkServerState();
+            })();
+        </script>
+    </head>
+    <body>
+        <h1>lagoon2container</h1>
+        <h3 id="hState">Getting state ...</h3>
+    </body>
+</html>

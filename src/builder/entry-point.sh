@@ -1,6 +1,10 @@
 echo "lagoon-builder ready to work !"
 
-rm -rf /app/build && mkdir /app/build && cd /app/src
+rm -rf /app/build/*
+rm -rf /app/src/*
+mkdir /app/build 
+cd /app/src
+
 dirName=`echo $GIT_URL | rev | cut -d/ -f1 | rev`
 git clone $GIT_URL $dirName
 

@@ -6,7 +6,7 @@ mkdir /app/build
 cd /app/src
 
 dirName=`echo $GIT_URL | rev | cut -d/ -f1 | rev`
-git clone $GIT_URL $dirName
+git clone --branch $GIT_BRANCH $GIT_URL $dirName
 
 cd $dirName
 dotnet build -c Release
